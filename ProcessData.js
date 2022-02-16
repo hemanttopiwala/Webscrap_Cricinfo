@@ -262,17 +262,72 @@ function createFolders(teams){
         fs.mkdirSync(teamName);
 
         for(let j=0;j<teams[i].matches.length;j++){
-
-            let filename=path.join(teamName,teams[i].matches[j].opponent+".pdf");
-
-            //createPDF(teams[i].name,teams[i].matches[j],filename);
-            
+            let filename=path.join(teamName,teams[i].matches[j].vs+".pdf");
+            createPDF(teams[i].name,teams[i].matches[j],filename);   
         }
-
-
     }
+}
 
 
+function createPDF(team,matches,filename){
 
+   
+
+
+    let t1=team;
+    let t2=matches.vs;
+    let t1s =matches.selfScore;
+    let t2s=matches.opponentScore;
+    let result=matches.result;
+
+    let pdfDocument=pdf.PDFDocument;
+
+
+    let orignalbytes=fs.readFileSync('Template.pdf');
+
+    let promiseToLoad=pdfDocument.load(orignalbytes);
+
+    promiseToLoad.then(function(pdfDoc){
+
+        let page=pdfDoc.getPage(0);
+
+        page.drawText(t1,{
+            x:155,
+            y:575,
+            size:14,
+        });
+
+        page.drawText(t2,{
+            x:395,
+            y:575,
+            size:14,
+        });
+
+        page.drawText(t1s,{
+            x:165,
+            y:550,
+            size:14,
+        });
+
+        page.drawText(t2s,{
+            x:405,
+            y:550,
+            size:14,
+        });
+
+         page.drawText(result,{
+             x:205,
+             y:483,
+             size:12,
+         });
+
+        let promisetoSavePage=pdfDoc.save();
+
+        promisetoSavePage.then(function(newbytes){
+
+            fs.writeFileSync(filename,newbytes);
+        })
+
+    });
 
 }
