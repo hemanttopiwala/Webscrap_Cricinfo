@@ -5,7 +5,7 @@
 // npm install axios
 // npm install pdf-lib
 
-// node ProcessData.js --Source='https://www.espncricinfo.com/series/icc-cricket-world-cup-2019-1144415/match-results' --datafolder=data --dest=Cricinfo.html --destexcel=data.csv
+// node ProcessData.js --Source='https://www.espncricinfo.com/series/icc-cricket-world-cup-2019-1144415/match-results' --datafolder=data --dest=Cricinfo.html --destexcel=data.csv 
 
 
 let minimist=require('minimist');
@@ -14,6 +14,7 @@ let excel4node=require('excel4node');
 let pdf=require('pdf-lib');
 let axios=require('axios');
 let fs=require('fs');
+let path=require('path');
 //read the data from cricinfo website
 //make a folder of data 
 // convert the data in excel formate using excel4node
@@ -99,7 +100,7 @@ promisefordownload.then(function(response){
      createExcelFile(teams);
 
 
-     createPDFfiles(teams);
+     createFolders(teams);
     
    
 
@@ -252,7 +253,26 @@ function createExcelFile(teams){
 
 
 
-function createPDFfiles(teams){
+function createFolders(teams){
 
-    
+    fs.mkdirSync(args.datafolder);
+    for(let i=0;i<teams.length;i++){ 
+
+        let teamName=path.join(args.datafolder,teams[i].name);
+        fs.mkdirSync(teamName);
+
+        for(let j=0;j<teams[i].matches.length;j++){
+
+            let filename=path.join(teamName,teams[i].matches[j].opponent+".pdf");
+
+            //createPDF(teams[i].name,teams[i].matches[j],filename);
+            
+        }
+
+
+    }
+
+
+
+
 }
