@@ -5,7 +5,7 @@
 // npm install axios
 // npm install pdf-lib
 
-// node ProcessData.js --Source='https://www.espncricinfo.com/series/icc-cricket-world-cup-2019-1144415/match-results' --datafolder=data --dest=Cricinfo.html
+// node ProcessData.js --Source='https://www.espncricinfo.com/series/icc-cricket-world-cup-2019-1144415/match-results' --datafolder=data --dest=Cricinfo.html --destexcel=data.csv
 
 
 let minimist=require('minimist');
@@ -93,10 +93,15 @@ promisefordownload.then(function(response){
     let jsonformate=JSON.stringify(teams);
 
     fs.writeFileSync('hemant.json',jsonformate);
-     
+
+
+
+     createExcelFile(teams);
     
    
 
+}).catch(function(err){
+    console.log(err);
 });
 
 
@@ -189,3 +194,56 @@ function populateMatches(teams,match){
 
 
 }
+
+
+
+function createExcelFile(teams){
+        let wb=new excel4node.Workbook();
+        var style = wb.createStyle({
+            font: {
+            color: 'white',
+            size: 12,
+            },
+            fill:{
+
+                type:'pattern',
+                patternType:'solid',
+
+                fgColor: "pink"
+            },
+            alignment: {
+                wrapText: true,
+                horizontal: 'center',
+            }
+        });
+
+        for(let i=0;i<teams.length;i++){
+
+            let sheet=wb.addWorksheet(teams[i].name);
+
+            sheet.cell(1,1).string(teams[i].name).style(style);
+            sheet.cell(1,3).string("Opponent").style(style);
+            sheet.cell(1,5).string("Self Score").style(style);
+            sheet.cell(1,7).string("Opponent Score").style(style);
+            sheet.cell(1,9).string("Result").style(style);
+
+
+            for(let j=0;j<teams[i].matches.length;j++){
+
+                sheet.cell(2+j,3).string(teams[i].matches[j].vs);
+
+                sheet.cell(2+j,5).string(teams[i].matches[j].selfScore);
+                sheet.cell(2+j,7).string(teams[i].matches[j].opponentScore);
+                sheet.cell(2+j,9).string(teams[i].matches[j].result);
+
+
+            }
+
+
+
+        }
+
+        wb.write(args.destexcel);
+
+}
+
