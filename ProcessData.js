@@ -97,6 +97,9 @@ promisefordownload.then(function(response){
 
 
      createExcelFile(teams);
+
+
+     createPDFfiles(teams);
     
    
 
@@ -247,3 +250,9 @@ function createExcelFile(teams){
 
 }
 
+
+
+function createPDFfiles(teams){
+
+    
+}
