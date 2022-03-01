@@ -7,7 +7,6 @@
 
 // node ProcessData.js --Source='https://www.espncricinfo.com/series/icc-cricket-world-cup-2019-1144415/match-results' --datafolder=data --dest=Cricinfo.html --destexcel=data.csv 
 
-
 let minimist=require('minimist');
 let jsdom=require('jsdom');
 let excel4node=require('excel4node');
